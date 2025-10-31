@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste Swiper Parallax</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+      html {
+        scroll-behavior: smooth;
+        background-color: #e3e3e3;
+      }
+
+      body {
+        font-family: Poppins, sans-serif;
+        font-weight: 400;
+        background: #eee;
+        width: 90%;
+        margin: 0 auto;
+      }
+
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        width: 90%;
+        margin: 0 auto;
+      }
+
+      nav ul {
+        display: flex;
+        gap: 20px;
+      }
+
+      nav ul li {
+        list-style: none;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: #000;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333333;
+        text-transform: uppercase;
+      }
+
+      .user-account {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #333333;
+        text-transform: uppercase;
+      }
+
+      .user-account img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+
+      .user-account span {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .swiper {
+        width: 100%;
+        height: 100vh;
+        border-radius: 10px;
+        background: #e3e3e3;
+      }
+
+      .swiper-slide {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+      }
+
+      /*.parallax-bg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 130%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-image: url("https://images.unsplash.com/photo-1471194458315-3b3ba67a2118?w=800");
+      }*/
+
+      .swiper-slide-content {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .swiper-slide .title {
+        font-size: 3rem;
+        font-weight: bold;
+        color: rgba(51, 51, 51, 0.5);
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 64;
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+      }
+
+      .swiper-slide .text {
+        color: rgba(51, 51, 51, 0.5);
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 200px;
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        padding: 0;
+        margin-top: -20px;
+      }
+
+      .swiper-slide .text p {
+        margin: 0;
+        padding: 0;
+        margin-top: -60px;
+      }
+
+      .swiper-slide img {
+        margin-top: -20px;
+      }
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        color: #1e1e1e;
+      }
+
+      /* Pagination */
+      .swiper-pagination {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 12vh !important;
+        z-index: 3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+        background: #9aa0a6;
+        opacity: 1;
+        margin: 0 6px !important;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .swiper-pagination-bullet-active {
+        background: #314559;
+        transform: scale(1);
+      }
+
+      .swiper-slide [data-swiper-parallax-x],
+      .swiper-slide [data-swiper-parallax-y] {
+        transition-timing-function: cubic-bezier(0.5, -0.63, 0.2, 1);
+      }
+
+      .social-rail {
+        position: absolute;
+        left: 16px;
+        top: calc(60% + 48px);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        z-index: 5;
+      }
+
+      .social {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        color: #2b2b2b;
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        transition: background-color 0.2s ease, transform 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .social:hover {
+        background: rgba(0, 0, 0, 0.12);
+        transform: translateY(-1px);
+        color: #000;
+      }
+
+      .car-container {
+        position: relative;
+        z-index: 2;
+        margin-top: -150px;
+      }
+
+      .car-body {
+        width: 1000px;
+      }
+
+      /* Wheels - Car 00 - Lexus */
+      .wheel-0 {
+        position: absolute;
+        width: 150px;
+        transition: transform 0.4s ease-out;
+      }
+
+      .wheel-front-car-0 {
+        top: 140px;
+        left: 120px;
+      }
+      .wheel-back-car-0 {
+        top: 140px;
+        left: 710px;
+      }
+
+      .rent-now-0 {
+        background-color: #78000d;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        border: 2px solid #78000d;
+      }
+
+      .details-0 {
+        background-color: transparent;
+        color: #555658;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 2px solid #555658;
+        cursor: pointer;
+      }
+
+      .rent-now-0:hover {
+        background-color: transparent;
+        color: #78000d;
+        border: 2px solid #78000d;
+      }
+
+      .details-0:hover {
+        color: #78000d;
+        border: 2px solid #78000d;
+      }
+
+      /* Wheels - Car 01 - Ford */
+      .wheel-1 {
+        position: absolute;
+        width: 160px;
+        transition: transform 0.4s ease-out;
+      }
+
+      .wheel-front-car-1 {
+        top: 200px;
+        left: 120px;
+      }
+      .wheel-back-car-1 {
+        top: 200px;
+        left: 695px;
+      }
+
+      .rent-now-1 {
+        background-color: #314559;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        border: 2px solid #314559;
+      }
+
+      .details-1 {
+        background-color: transparent;
+        color: #555658;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 2px solid #555658;
+        cursor: pointer;
+      }
+
+      .rent-now-1:hover {
+        background-color: transparent;
+        color: #314559;
+        border: 2px solid #314559;
+      }
+
+      .details-1:hover {
+        color: #314559;
+        border: 2px solid #314559;
+      }
+
+      /* Wheels - Car 02 - Audi */
+      .wheel-2 {
+        position: absolute;
+        width: 160px;
+        transition: transform 0.4s ease-out;
+      }
+      .wheel-front-car-2 {
+        top: 210px;
+        left: 140px;
+      }
+      .wheel-back-car-2 {
+        top: 210px;
+        left: 740px;
+      }
+
+      .rent-now-2 {
+        background-color: #5b5b5f;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        border: 2px solid #5b5b5f;
+      }
+
+      .details-2 {
+        background-color: transparent;
+        color: #555658;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 2px solid #555658;
+        cursor: pointer;
+      }
+
+      .rent-now-2:hover {
+        background-color: transparent;
+        color: #555658;
+        border: 2px solid #555658;
+      }
+
+      .details-2:hover {
+        color: #333333;
+        border: 2px solid #333333;
+      }
+
+      .rent-now-0,
+      .rent-now-1,
+      .rent-now-2,
+      .details-0,
+      .details-1,
+      .details-2 {
+        height: 48px;
+        width: 180px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      /* Animation - Wheels */
+      .is-spinning .wheel-0,
+      .is-spinning .wheel-1,
+      .is-spinning .wheel-2 {
+        animation: spin 4s linear infinite;
+        transition: none;
+      }
+
+      .swiper-slide-content-bottom {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(var(--spin-direction, 360deg));
+        }
+      }
+
+      /* Painel oculto por padrão */
+      .details-panel {
+        display: none;
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        width: 100%;
+        max-width: 1100px;
+        padding: 16px 0;
+      }
+
+      /* Layout do painel */
+      .details-title {
+        color: #454545;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        margin: 12px 0 16px;
+        text-transform: uppercase;
+        font-size: 16px;
+        margin-bottom: 35px;
+      }
+
+      .details-gallery {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+
+      .details-gallery img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        background: #ddd;
+      }
+
+      .details-specs {
+        position: absolute;
+        right: -90px;
+        top: -450px;
+        display: grid;
+        gap: 18px;
+        padding: 16px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(4px);
+      }
+
+      .details-specs .spec {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        color: #444;
+      }
+      .details-specs .icon {
+        font-size: 18px;
+      }
+      .details-specs .spec-value {
+        font-weight: 800;
+        color: #333;
+      }
+      .details-specs .spec-label {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        color: #888;
+      }
+
+      /* Estado: modo detalhes */
+      .swiper.is-details .swiper-slide-active .details-panel {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Carro e textos sobem/somem no modo detalhes */
+      .swiper.is-details .swiper-slide-active .car-container,
+      .swiper.is-details .swiper-slide-active .title,
+      .swiper.is-details .swiper-slide-active .text {
+        transform: translateY(-24vh);
+        opacity: 0;
+        transition: transform 0.6s ease, opacity 0.6s ease;
+        pointer-events: none;
+      }
+
+      /* Esconde navegação direita, bullets, botões, social e “Rent/Details” */
+      .swiper.is-details .swiper-button-next,
+      .swiper.is-details .swiper-pagination,
+      .swiper.is-details .swiper-slide-active .swiper-slide-content-bottom,
+      .swiper.is-details .social-rail {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      /* Seta esquerda vira “Voltar” (reposiciona) */
+      .swiper.is-details .swiper-button-prev {
+        left: 24px;
+        top: 24px;
+        right: auto;
+        color: #333;
+        transform: none;
+      }
+      .swiper.is-details .swiper-button-prev::after {
+        font-size: 20px;
+      }
+      .swiper.is-details .swiper-button-prev::before {
+        content: "";
+        position: absolute;
+        left: 28px;
+        top: 2px;
+        font-size: 14px;
+        color: #333;
+      }
+
+      /* Responsivo básico */
+      @media (max-width: 1024px) {
+        .details-specs {
+          position: static;
+          background: transparent;
+          padding: 0;
+          gap: 10px;
+        }
+        .details-gallery {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <img src="./assets/img/logo.png" alt="Logo" />
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Electric Cars</a></li>
+          <li><a href="#">Sport Cars</a></li>
+          <li><a href="#">SUV</a></li>
+        </ul>
+        <div class="user-account">
+          <img src="./assets/img/user.png" alt="User" />
+          <span>My Account</span>
+        </div>
+      </nav>
+    </header>
+    <div class="swiper">
+      <div class="parallax-bg" data-swiper-parallax-x="-23%"></div>
+
+      <div class="swiper-wrapper">
+         <!-- Car 00 - Lexus -->
+        <div class="swiper-slide">
+          <div class="swiper-slide-content">
+            <div
+              class="title"
+              data-swiper-parallax-y="-120%"
+              data-swiper-parallax-opacity="0"
+              data-swiper-parallax-duration="1200"
+              data-swiper-parallax-opposite="true"
+            >
+              Lexus
+            </div>
+
+            <div
+              class="text"
+              data-swiper-parallax-y="-140%"
+              data-swiper-parallax-opacity="0"
+              data-swiper-parallax-duration="1400"
+              data-swiper-parallax-opposite="true"
+            >
+              <p>LC Series</p>
+            </div>
+          </div>
+          <div
+            class="car-container"
+            data-swiper-parallax-x="-600"
+            data-swiper-parallax-opacity="0"
+          >
+            <img src="./assets/img/Lexus-LC-Body.png" class="car-body" />
+
+            <img
+              src="./assets/img/Lexus-LC-Wheel.png"
+              class="wheel-0 wheel-front-car-0"
+            />
+            <img
+              src="./assets/img/Lexus-LC-Wheel.png"
+              class="wheel-0 wheel-back-car-0"
+            />
+          </div>
+          <div class="swiper-slide-content-bottom">
+            <button class="rent-now-0">Rent Now</button>
+            <button class="details-0">Details</button>
+          </div>
+          <div class="details-panel">
+            <div class="details-specs">
+              <h3 class="details-title">Specs</h3>
+              <div class="spec">
+                <i class="fa-solid fa-gas-pump icon" aria-hidden="true"></i>
+                <div>
+                  <div class="spec-value">800 KM</div>
+                  <div class="spec-label">GAS</div>
+                </div>
+              </div>
+              <div class="spec">
+                <i class="fa-solid fa-chair icon" aria-hidden="true"></i>
+                <div>
+                  <div class="spec-value">4</div>
+                  <div class="spec-label">Seats</div>
+                </div>
+              </div>
+              <div class="spec">
+                <i class="fa-solid fa-gauge-high icon" aria-hidden="true"></i>
+                <div>
+                  <div class="spec-value">335</div>
+                  <div class="spec-label">Horse Power</div>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="details-title">Take a look</h3>
+            <div class="details-gallery">
+              <img
+                src="./assets/img/Lexus-LC-Photo-01.png"
+                alt=""
+              />
+              <img
+                src="./assets/img/Lexus-LC-Photo-02.png"
+                alt=""
+              />
+              <img
+                src="./assets/img/Lexus-LC-Photo-03.png"
+                alt=""
+              />
+              <img
+                src="./assets/img/Lexus-LC-Photo-04.png"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Car 01 - Ford -->
+        <div class="swiper-slide">
+          <div
+            class="title"
+            data-swiper-parallax-y="-120%"
+            data-swiper-parallax-opacity="0"
+            data-swiper-parallax-duration="1200"
+            data-swiper-parallax-opposite="true"
+          >
+            Ford
+          </div>
+
+          <div
+            class="text"
+            data-swiper-parallax-y="-140%"
+            data-swiper-parallax-opacity="0"
+            data-swiper-parallax-duration="1400"
+            data-swiper-parallax-opposite="true"
+          >
+            <p>Mustang</p>
+          </div>
+
+          <div
+            class="car-container"
+            data-swiper-parallax-x="-600"
+            data-swiper-parallax-opacity="0"
+          >
+            <img src="./assets/img/Ford-Mustang-Body.png" class="car-body" />
+
+            <img
+              src="./assets/img/Ford-Mustang-Wheel-Front.png"
+              class="wheel-1 wheel-front-car-1"
+            />
+            <img
+              src="./assets/img/Ford-Mustang-Wheel-Back.png"
+              class="wheel-1 wheel-back-car-1"
+            />
+          </div>
+          <div class="swiper-slide-content-bottom">
+            <button class="rent-now-1">Rent Now</button>
+            <button class="details-1">Details</button>
+          </div>
+        </div>
+
+        <!-- Car 02 - Audi -->
+        <div class="swiper-slide">
+          <div
+            class="title"
+            data-swiper-parallax-y="-120%"
+            data-swiper-parallax-opacity="0"
+            data-swiper-parallax-duration="1200"
+            data-swiper-parallax-opposite="true"
+          >
+            Audi
+          </div>
+
+          <div
+            class="text"
+            data-swiper-parallax-y="-140%"
+            data-swiper-parallax-opacity="0"
+            data-swiper-parallax-duration="1400"
+            data-swiper-parallax-opposite="true"
+          >
+            <p>A5</p>
+          </div>
+
+          <div
+            class="car-container"
+            data-swiper-parallax-x="-600"
+            data-swiper-parallax-opacity="0"
+          >
+            <img src="./assets/img/Audi-A5-Body.png" class="car-body" />
+
+            <img
+              src="./assets/img/Audi-A5-Wheel.png"
+              class="wheel-2 wheel-front-car-2"
+            />
+            <img
+              src="./assets/img/Audi-A5-Wheel.png"
+              class="wheel-2 wheel-back-car-2"
+            />
+          </div>
+          <div class="swiper-slide-content-bottom">
+            <button class="rent-now-2">Rent Now</button>
+            <button class="details-2">Details</button>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+
+      <!-- Social Rail -->
+      <div class="social-rail">
+        <a href="#" aria-label="Facebook" class="social"
+          ><i class="fa-brands fa-facebook-f"></i
+        ></a>
+        <a href="#" aria-label="Twitter/X" class="social"
+          ><i class="fa-brands fa-x-twitter"></i
+        ></a>
+        <a href="#" aria-label="Google" class="social"
+          ><i class="fa-brands fa-google"></i
+        ></a>
+        <a href="#" aria-label="Instagram" class="social"
+          ><i class="fa-brands fa-instagram"></i
+        ></a>
+        <a href="#" aria-label="Pinterest" class="social"
+          ><i class="fa-brands fa-pinterest-p"></i
+        ></a>
+      </div>
+
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      const swiper = new Swiper(".swiper", {
+        speed: 2000,
+        parallax: true,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+
+        on: {
+          transitionStart: function () {
+            const spinTo =
+              this.swipeDirection === "next" ? "360deg" : "-360deg";
+
+            const wrapper = this.wrapperEl;
+            wrapper.style.transitionTimingFunction =
+              "cubic-bezier(0.5, -0.3, 0.2, 1)";
+
+            const setEase = (slide, ease) => {
+              if (!slide) return;
+              slide
+                .querySelectorAll(
+                  "[data-swiper-parallax-x], [data-swiper-parallax-y]"
+                )
+                .forEach((el) => {
+                  el.style.transitionTimingFunction = ease;
+                });
+            };
+
+            const outgoing = this.slides[this.previousIndex];
+            const incoming = this.slides[this.activeIndex];
+
+            // saída: recuo no início, sem overshoot no fim
+            setEase(outgoing, "cubic-bezier(0.5, -0.3, 0.2, 1)");
+            // entrada: suave sem recuo
+            setEase(incoming, "cubic-bezier(0.22, 1, 0.36, 1)");
+
+            const applySpin = (slide) => {
+              if (!slide) return;
+              const carContainer = slide.querySelector(".car-container");
+              if (carContainer) {
+                carContainer.style.setProperty("--spin-direction", spinTo);
+
+                carContainer.classList.add("is-spinning");
+
+                const wheels = carContainer.querySelectorAll(
+                  ".wheel-0, .wheel-1, .wheel-2"
+                );
+                wheels.forEach(
+                  (wheel) => (wheel.style.animationPlayState = "running")
+                );
+              }
+            };
+
+            applySpin(this.slides[this.previousIndex]);
+            applySpin(this.slides[this.activeIndex]);
+          },
+
+          setTranslate: function () {
+            const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+            this.slides.forEach((slide) => {
+              const progress = clamp(slide.progress, -1, 1);
+              slide
+                .querySelectorAll("[data-swiper-parallax-y]")
+                .forEach((el) => {
+                  const attr = el.getAttribute("data-swiper-parallax-y") || "0";
+                  const isPct = attr.includes("%");
+                  const base = parseFloat(attr) || 0;
+                  // Converte para px: use módulo e aplica SEMPRE para cima (sinal negativo)
+                  const amountPx = isPct
+                    ? (this.height * Math.abs(base)) / 100
+                    : Math.abs(base);
+                  const translateY = -amountPx * Math.abs(progress);
+                  // Mantém X do Swiper e só força Y "para cima"
+                  const current = getComputedStyle(el).transform;
+                  el.style.transform = `translate3d(0, ${translateY}px, 0)`;
+                });
+            });
+          },
+
+          transitionEnd: function () {
+            this.wrapperEl.style.transitionTimingFunction = "";
+            this.slides.forEach((slide) => {
+              const carContainer = slide.querySelector(".car-container");
+
+              if (
+                carContainer &&
+                carContainer.classList.contains("is-spinning")
+              ) {
+                const wheels = carContainer.querySelectorAll(
+                  ".wheel-0, .wheel-1, .wheel-2"
+                );
+                wheels.forEach(
+                  (wheel) => (wheel.style.animationPlayState = "paused")
+                );
+              }
+            });
+          },
+        },
+      });
+      const root = document.querySelector('.swiper');
+      document
+        .querySelectorAll(".details-0, .details-1, .details-2")
+        .forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (!root) return;
+            root.classList.add("is-details");
+
+            // trava navegação enquanto em detalhes
+            swiper.allowTouchMove = false;
+            swiper.allowSlideNext = false;
+            swiper.allowSlidePrev = false;
+          });
+        });
+
+      // seta esquerda vira "voltar" quando em detalhes
+      const prevBtn = document.querySelector(".swiper-button-prev");
+      if (prevBtn) {
+        prevBtn.addEventListener("click", (e) => {
+          if (!root) return;
+          if (root.classList.contains("is-details")) {
+            e.preventDefault();
+            root.classList.remove("is-details");
+            swiper.allowTouchMove = true;
+            swiper.allowSlideNext = true;
+            swiper.allowSlidePrev = true;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
